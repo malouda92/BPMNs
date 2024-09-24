@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1rct764" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.27.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="processus_commande" name="processus commande" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="commande_recue" name="commande reçue">
+      <bpmn:outgoing>Flow_1n3k31w</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0eix0s2" messageRef="Message_3nhp6sq" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="enregistrer_commande" name="Enregistrer commande" camunda:type="external" camunda:topic="SYSTEM.ENREGISTRER.COMMANDE">
+      <bpmn:incoming>Flow_1n3k31w</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m0tcmg</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="notifier_cuisine" name="Notifier la cuisine" camunda:type="external" camunda:topic="SYSTEM.NOTIFIER.CUISINE">
+      <bpmn:incoming>Flow_1m0tcmg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dnp7mq</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="commande_prete" name="commande prête">
+      <bpmn:incoming>Flow_0dnp7mq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ocn783</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_079rszf" messageRef="Message_07tvefa" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sendTask id="notifier_livraison" name="Notifier la livraison" camunda:type="external" camunda:topic="SYSTEM.NOTIFIER.LIVRAISON">
+      <bpmn:incoming>Flow_0ocn783</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nh207c</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="commande_effectuee" name="commande effectuée">
+      <bpmn:incoming>Flow_0nh207c</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1n3k31w" sourceRef="commande_recue" targetRef="enregistrer_commande" />
+    <bpmn:sequenceFlow id="Flow_1m0tcmg" sourceRef="enregistrer_commande" targetRef="notifier_cuisine" />
+    <bpmn:sequenceFlow id="Flow_0dnp7mq" sourceRef="notifier_cuisine" targetRef="commande_prete" />
+    <bpmn:sequenceFlow id="Flow_0ocn783" sourceRef="commande_prete" targetRef="notifier_livraison" />
+    <bpmn:sequenceFlow id="Flow_0nh207c" sourceRef="notifier_livraison" targetRef="commande_effectuee" />
+  </bpmn:process>
+  <bpmn:message id="Message_3nhp6sq" name="message_commande_recue" />
+  <bpmn:message id="Message_07tvefa" name="message_commande_prete" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="processus_commande">
+      <bpmndi:BPMNShape id="BPMNShape_0figoob" bpmnElement="commande_recue">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_07oxvud" bpmnElement="enregistrer_commande">
+        <dc:Bounds x="300" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_04xo2ea" bpmnElement="notifier_cuisine">
+        <dc:Bounds x="450" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_03mht43" bpmnElement="commande_prete">
+        <dc:Bounds x="612" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="588" y="83" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0gsvrh0" bpmnElement="notifier_livraison">
+        <dc:Bounds x="700" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1sak9tc" bpmnElement="commande_effectuee">
+        <dc:Bounds x="842" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="833" y="145" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_04o26wo" bpmnElement="Flow_1n3k31w">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="300" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0yx5nel" bpmnElement="Flow_1m0tcmg">
+        <di:waypoint x="400" y="120" />
+        <di:waypoint x="450" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1y8kwhf" bpmnElement="Flow_0dnp7mq">
+        <di:waypoint x="550" y="120" />
+        <di:waypoint x="612" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1nhtq2h" bpmnElement="Flow_0ocn783">
+        <di:waypoint x="648" y="120" />
+        <di:waypoint x="700" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1qedu0i" bpmnElement="Flow_0nh207c">
+        <di:waypoint x="800" y="120" />
+        <di:waypoint x="842" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

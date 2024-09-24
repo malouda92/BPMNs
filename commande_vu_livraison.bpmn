@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_10254c1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.27.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="processus_livraison" name="Processus livraison" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="livraison_lancee" name="livraison lancée">
+      <bpmn:outgoing>Flow_099g9qh</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0d1pvrc" messageRef="Message_00valss" />
+    </bpmn:startEvent>
+    <bpmn:userTask id="preparer_la_livraison" name="Préparer la livraison">
+      <bpmn:incoming>Flow_099g9qh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s5ry2e</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="notifier_confirmation_de_livraison" name="Notifier confirmation de livraison" camunda:type="external" camunda:topic="LIVRAISON.NOTIFIER.LIVRAISON">
+      <bpmn:incoming>Flow_0s5ry2e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dacqj7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="livrer_la_commande" name="Livrer la commande">
+      <bpmn:incoming>Flow_0dacqj7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xbvpcn</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="notifier_commande_livree" name="Notifier commande livrée" camunda:type="external" camunda:topic="LIVRAISON.NOTIFIER.LIVREE">
+      <bpmn:incoming>Flow_0xbvpcn</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yje3fc</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="livraison_terminee" name="livraison terminée">
+      <bpmn:incoming>Flow_1yje3fc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_099g9qh" sourceRef="livraison_lancee" targetRef="preparer_la_livraison" />
+    <bpmn:sequenceFlow id="Flow_0s5ry2e" sourceRef="preparer_la_livraison" targetRef="notifier_confirmation_de_livraison" />
+    <bpmn:sequenceFlow id="Flow_0dacqj7" sourceRef="notifier_confirmation_de_livraison" targetRef="livrer_la_commande" />
+    <bpmn:sequenceFlow id="Flow_0xbvpcn" sourceRef="livrer_la_commande" targetRef="notifier_commande_livree" />
+    <bpmn:sequenceFlow id="Flow_1yje3fc" sourceRef="notifier_commande_livree" targetRef="livraison_terminee" />
+  </bpmn:process>
+  <bpmn:message id="Message_00valss" name="message_livraison_lancee" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="processus_livraison">
+      <bpmndi:BPMNShape id="Event_055i2gs_di" bpmnElement="livraison_lancee">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152" y="145" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vykh7z_di" bpmnElement="preparer_la_livraison">
+        <dc:Bounds x="250" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wdmpd9_di" bpmnElement="notifier_confirmation_de_livraison">
+        <dc:Bounds x="400" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0onl7zb_di" bpmnElement="livrer_la_commande">
+        <dc:Bounds x="540" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jesjzk_di" bpmnElement="notifier_commande_livree">
+        <dc:Bounds x="670" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hy4hpx_di" bpmnElement="livraison_terminee">
+        <dc:Bounds x="822" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="797" y="145" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_099g9qh_di" bpmnElement="Flow_099g9qh">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="250" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s5ry2e_di" bpmnElement="Flow_0s5ry2e">
+        <di:waypoint x="350" y="120" />
+        <di:waypoint x="400" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dacqj7_di" bpmnElement="Flow_0dacqj7">
+        <di:waypoint x="500" y="120" />
+        <di:waypoint x="540" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xbvpcn_di" bpmnElement="Flow_0xbvpcn">
+        <di:waypoint x="640" y="120" />
+        <di:waypoint x="670" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yje3fc_di" bpmnElement="Flow_1yje3fc">
+        <di:waypoint x="770" y="120" />
+        <di:waypoint x="822" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
