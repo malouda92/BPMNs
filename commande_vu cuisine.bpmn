@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_049i1g2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.27.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="processus_cuisine" name="Processus cuisine" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="notification_envoyee" name="notification envoyée">
+      <bpmn:outgoing>Flow_025nnwv</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0cllfnv" messageRef="Message_2s3477a" />
+    </bpmn:startEvent>
+    <bpmn:userTask id="preparer_commande" name="Préparer la commande">
+      <bpmn:incoming>Flow_025nnwv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1uujos4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="notifier_commande_en_preparation" name="Notifier commande en préparation" camunda:type="external" camunda:topic="CUISINE.NOTIFIER.PREPARATION">
+      <bpmn:incoming>Flow_1uujos4</bpmn:incoming>
+      <bpmn:outgoing>Flow_1l34t20</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="terminer_la_commande" name="Terminer la commande">
+      <bpmn:incoming>Flow_1l34t20</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i6kpnw</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="notifier_commande_prete" name="Notifier commande prête" camunda:type="external" camunda:topic="CUISINE.NOTIFIER.PRETE">
+      <bpmn:incoming>Flow_1i6kpnw</bpmn:incoming>
+      <bpmn:outgoing>Flow_05edrdb</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="commande_preparee" name="commande préparée">
+      <bpmn:incoming>Flow_05edrdb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_025nnwv" sourceRef="notification_envoyee" targetRef="preparer_commande" />
+    <bpmn:sequenceFlow id="Flow_1uujos4" sourceRef="preparer_commande" targetRef="notifier_commande_en_preparation" />
+    <bpmn:sequenceFlow id="Flow_1l34t20" sourceRef="notifier_commande_en_preparation" targetRef="terminer_la_commande" />
+    <bpmn:sequenceFlow id="Flow_1i6kpnw" sourceRef="terminer_la_commande" targetRef="notifier_commande_prete" />
+    <bpmn:sequenceFlow id="Flow_05edrdb" sourceRef="notifier_commande_prete" targetRef="commande_preparee" />
+  </bpmn:process>
+  <bpmn:message id="Message_2s3477a" name="message_notification_envoyee" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="processus_cuisine">
+      <bpmndi:BPMNShape id="Event_1khrgu2_di" bpmnElement="notification_envoyee">
+        <dc:Bounds x="162" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="154" y="145" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17tlb8e_di" bpmnElement="preparer_commande">
+        <dc:Bounds x="250" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bvm5ek_di" bpmnElement="notifier_commande_en_preparation">
+        <dc:Bounds x="380" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0m5qyxp_di" bpmnElement="terminer_la_commande">
+        <dc:Bounds x="510" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1735aaw_di" bpmnElement="notifier_commande_prete">
+        <dc:Bounds x="640" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1huby1v_di" bpmnElement="commande_preparee">
+        <dc:Bounds x="792" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="783" y="145" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_025nnwv_di" bpmnElement="Flow_025nnwv">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="250" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uujos4_di" bpmnElement="Flow_1uujos4">
+        <di:waypoint x="350" y="120" />
+        <di:waypoint x="380" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1l34t20_di" bpmnElement="Flow_1l34t20">
+        <di:waypoint x="480" y="120" />
+        <di:waypoint x="510" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i6kpnw_di" bpmnElement="Flow_1i6kpnw">
+        <di:waypoint x="610" y="120" />
+        <di:waypoint x="640" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05edrdb_di" bpmnElement="Flow_05edrdb">
+        <di:waypoint x="740" y="120" />
+        <di:waypoint x="792" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
